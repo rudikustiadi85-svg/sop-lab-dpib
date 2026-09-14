@@ -3,185 +3,586 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOP Lab Gambar / Desain DPIB - SMKN 1 Kalipucang</title>
+    <title>Mind Map SOP Lab Gambar & Desain DPIB - SMKN 1 Kalipucang</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        dpib: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#0284c7',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                            dark: '#0b1329',
+                            blueprint: '#1e293b'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
+        body {
+            background-color: #080d1a;
+            color: #f1f5f9;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Architectural Grid Pattern Background */
+        .blueprint-grid {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+        }
+
+        .blueprint-dots {
+            background-image: radial-gradient(rgba(56, 189, 248, 0.15) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* Glowing Effects */
+        .glow-node {
+            box-shadow: 0 0 20px -5px rgba(56, 189, 248, 0.4);
+        }
+        .glow-node:hover {
+            box-shadow: 0 0 30px 2px rgba(56, 189, 248, 0.7);
+        }
+
+        /* SVG Line Styling */
+        .mindmap-connector {
+            stroke: #38bdf8;
+            stroke-width: 2.5;
+            stroke-dasharray: 6 3;
+            animation: dash 30s linear infinite;
+        }
+        @keyframes dash {
+            to { stroke-dashoffset: -1000; }
+        }
+
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #38bdf8;
+        }
+
         @media print {
             .no-print { display: none !important; }
-            body { background: white; color: black; }
-            .print-container { width: 100%; max-width: 100%; margin: 0; padding: 0; box-shadow: none; }
-        }
-        .blueprint-bg {
-            background-color: #0e2a47;
-            background-image: radial-gradient(#1e4976 1px, transparent 0);
-            background-size: 20px 20px;
+            body { background: white !important; color: black !important; }
+            .print-poster { display: block !important; }
+            .mindmap-view { display: none !important; }
         }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
+<body class="blueprint-grid min-h-screen flex flex-col justify-between select-none">
 
-    <!-- Header / Navbar -->
-    <header class="no-print bg-slate-800 border-b border-slate-700 p-4 sticky top-0 z-50 flex flex-wrap justify-between items-center shadow-lg">
-        <div class="flex items-center gap-3">
-            <i class="fa-solid fa-drafting-compass text-cyan-400 text-2xl"></i>
-            <h1 class="text-xl font-bold text-white tracking-wide">SOP LAB DPIB - SMKN 1 KALIPUCANG</h1>
-        </div>
-        <div class="flex gap-3 mt-2 sm:mt-0">
-            <button onclick="window.print()" class="bg-cyan-600 hover:bg-cyan-500 text-white px-4 py-2 rounded-lg font-medium transition flex items-center gap-2">
-                <i class="fa-solid fa-print"></i> Cetak SOP
-            </button>
+    <!-- TOP NAVIGATION BAR -->
+    <header class="no-print bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50 px-4 py-3">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white text-xl shadow-lg shadow-cyan-500/20">
+                    <i class="fa-solid fa-compass-drafting"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg text-white leading-tight">INTERACTIVE MIND MAP SOP LAB DPIB</h1>
+                    <p class="text-xs text-cyan-400 font-mono">SMK NEGERI 1 KALIPUCANG • CAD & BIM CENTER</p>
+                </div>
+            </div>
+
+            <!-- Controls & Mode Toggles -->
+            <div class="flex items-center space-x-2">
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-slate-400"></i>
+                    <input type="text" id="searchInput" onkeyup="searchNodes()" placeholder="Cari aturan/kata kunci..." class="bg-slate-800/90 text-xs text-white pl-8 pr-3 py-2 rounded-lg border border-slate-700 focus:outline-none focus:border-cyan-400 w-44 sm:w-60 transition">
+                </div>
+
+                <button onclick="toggleViewMode('mindmap')" id="btnMindmap" class="px-3 py-2 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950 flex items-center space-x-1 transition shadow-md">
+                    <i class="fa-solid fa-diagram-project"></i>
+                    <span class="hidden sm:inline">Mind Map</span>
+                </button>
+                <button onclick="toggleViewMode('poster')" id="btnPoster" class="px-3 py-2 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 flex items-center space-x-1 transition">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    <span class="hidden sm:inline">Modus Poster Cetak</span>
+                </button>
+                <button onclick="window.print()" class="px-3 py-2 rounded-lg text-xs font-semibold bg-amber-500 text-slate-950 hover:bg-amber-400 flex items-center space-x-1 transition shadow-md">
+                    <i class="fa-solid fa-print"></i>
+                    <span class="hidden sm:inline">Cetak SOP</span>
+                </button>
+            </div>
         </div>
     </header>
 
-    <!-- Main Content Container -->
-    <main class="print-container max-w-6xl mx-auto p-6">
-        
-        <!-- Header Banner Poster -->
-        <div class="blueprint-bg border-2 border-cyan-500/30 rounded-2xl p-8 mb-8 text-center relative overflow-hidden shadow-2xl">
-            <div class="absolute -right-10 -bottom-10 opacity-10 text-cyan-400">
-                <i class="fa-solid fa-compass-drafting text-[200px]"></i>
+    <!-- MAIN INTERACTIVE MIND MAP CONTAINER -->
+    <main id="mindmapView" class="mindmap-view relative flex-1 p-4 sm:p-8 overflow-auto flex items-center justify-center min-h-[85vh]">
+        <!-- Dynamic Canvas for Connecting SVG Lines -->
+        <svg id="svgCanvas" class="absolute top-0 left-0 w-full h-full pointer-events-none z-0"></svg>
+
+        <div class="relative z-10 w-full max-w-6xl mx-auto py-8">
+            
+            <!-- CENTRAL ROOT NODE -->
+            <div class="flex justify-center mb-16">
+                <div id="rootNode" onclick="selectNode('root')" class="glow-node bg-gradient-to-r from-cyan-600 via-blue-700 to-indigo-800 text-white border-2 border-cyan-400 rounded-2xl p-6 text-center shadow-2xl cursor-pointer transform hover:scale-105 transition-all duration-300 max-w-md w-full relative">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-amber-400 text-slate-950 px-3 py-0.5 rounded-full text-[10px] font-mono font-extrabold uppercase tracking-widest shadow">
+                        Pusat Operasional Lab
+                    </div>
+                    <div class="text-3xl mb-2 text-cyan-200">
+                        <i class="fa-solid fa-laptop-code"></i>
+                    </div>
+                    <h2 class="text-xl font-black tracking-wide uppercase">SOP LAB GAMBAR & DESAIN</h2>
+                    <p class="text-xs text-cyan-100 mt-1 font-mono">DPIB - SMKN 1 KALIPUCANG</p>
+                    
+                    <div class="mt-3 bg-slate-950/40 rounded-lg p-2 text-[11px] italic text-slate-200 border border-white/10">
+                        "Lab Rapi, Desain Estetik, Skill Naik Drastis!"
+                    </div>
+                </div>
             </div>
-            <span class="bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-widest">
-                Kompetensi Keahlian DPIB
-            </span>
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-3 mb-2 uppercase tracking-wide">
-                Standar Operasional Prosedur (SOP)
-            </h2>
-            <p class="text-lg text-cyan-200 font-medium">Praktik di Ruang Lab Gambar / Desain DPIB</p>
-            <p class="text-sm text-slate-400 mt-1">SMKN 1 Kalipucang</p>
+
+            <!-- BRANCH NODES GRID (4 MAIN CATEGORIES) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+
+                <!-- BRANCH 1: TATA TERTIB UTAMA -->
+                <div id="branch1" onclick="selectNode('branch1')" class="mindmap-node bg-slate-900/90 border border-slate-700/80 hover:border-cyan-400 rounded-xl p-5 shadow-xl cursor-pointer hover:-translate-y-1 transition duration-300 backdrop-blur-sm group">
+                    <div class="flex items-center space-x-3 mb-3 border-b border-slate-800 pb-3">
+                        <div class="w-10 h-10 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-lg group-hover:scale-110 transition">
+                            <i class="fa-solid fa-clipboard-list"></i>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-cyan-400 font-mono font-bold block">BAGIAN 01</span>
+                            <h3 class="font-bold text-sm text-white">Tata Tertib Utama</h3>
+                        </div>
+                    </div>
+                    <ul class="space-y-2 text-xs text-slate-300">
+                        <li class="flex items-center space-x-2">
+                            <i class="fa-solid fa-clock text-amber-400"></i>
+                            <span>Hadir tepat waktu & isi absen</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fa-solid fa-user-tie text-cyan-400"></i>
+                            <span>Baju praktik rapi & sopan</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-red-400">
+                            <i class="fa-solid fa-ban"></i>
+                            <span>Dilarang makan & minum</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fa-solid fa-broom text-emerald-400"></i>
+                            <span>Jaga kebersihan & alat</span>
+                        </li>
+                    </ul>
+                    <div class="mt-4 pt-2 border-t border-slate-800/60 text-right">
+                        <span class="text-[10px] text-cyan-400 font-mono group-hover:underline">Detail Aturan &rarr;</span>
+                    </div>
+                </div>
+
+                <!-- BRANCH 2: PROSEDUR PRAKTIK -->
+                <div id="branch2" onclick="selectNode('branch2')" class="mindmap-node bg-slate-900/90 border border-slate-700/80 hover:border-blue-400 rounded-xl p-5 shadow-xl cursor-pointer hover:-translate-y-1 transition duration-300 backdrop-blur-sm group">
+                    <div class="flex items-center space-x-3 mb-3 border-b border-slate-800 pb-3">
+                        <div class="w-10 h-10 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg group-hover:scale-110 transition">
+                            <i class="fa-solid fa-diagram-next"></i>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-blue-400 font-mono font-bold block">BAGIAN 02</span>
+                            <h3 class="font-bold text-sm text-white">Alur Prosedur Praktik</h3>
+                        </div>
+                    </div>
+                    <div class="space-y-2 text-xs text-slate-300">
+                        <div class="bg-slate-800/50 p-2 rounded border border-slate-700/50">
+                            <strong class="text-cyan-400 block text-[11px]">1. Persiapan:</strong>
+                            <p class="text-[11px] text-slate-400">Cek listrik, PC & siapkan modul</p>
+                        </div>
+                        <div class="bg-slate-800/50 p-2 rounded border border-slate-700/50">
+                            <strong class="text-blue-400 block text-[11px]">2. Pelaksanaan:</strong>
+                            <p class="text-[11px] text-slate-400">Praktik CAD/BIM & Autosave file</p>
+                        </div>
+                        <div class="bg-slate-800/50 p-2 rounded border border-slate-700/50">
+                            <strong class="text-emerald-400 block text-[11px]">3. Penutupan:</strong>
+                            <p class="text-[11px] text-slate-400">Simpan file & Shutdown PC SOP</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-2 border-t border-slate-800/60 text-right">
+                        <span class="text-[10px] text-blue-400 font-mono group-hover:underline">Detail Langkah &rarr;</span>
+                    </div>
+                </div>
+
+                <!-- BRANCH 3: K3 & ERGONOMI -->
+                <div id="branch3" onclick="selectNode('branch3')" class="mindmap-node bg-slate-900/90 border border-slate-700/80 hover:border-emerald-400 rounded-xl p-5 shadow-xl cursor-pointer hover:-translate-y-1 transition duration-300 backdrop-blur-sm group">
+                    <div class="flex items-center space-x-3 mb-3 border-b border-slate-800 pb-3">
+                        <div class="w-10 h-10 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg group-hover:scale-110 transition">
+                            <i class="fa-solid fa-shield-heart"></i>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-emerald-400 font-mono font-bold block">BAGIAN 03</span>
+                            <h3 class="font-bold text-sm text-white">K3 & Ergonomi</h3>
+                        </div>
+                    </div>
+                    <ul class="space-y-2 text-xs text-slate-300">
+                        <li class="flex items-center space-x-2">
+                            <i class="fa-solid fa-child-reaching text-emerald-400"></i>
+                            <span>Duduk tegak & jaga jarak pandang</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
+                            <span>Dilarang modifikasi PC/kabel</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fa-solid fa-bullhorn text-cyan-400"></i>
+                            <span>Laporkan kerusakan ke guru</span>
+                        </li>
+                    </ul>
+                    <div class="mt-4 pt-2 border-t border-slate-800/60 text-right">
+                        <span class="text-[10px] text-emerald-400 font-mono group-hover:underline">Detail K3 &rarr;</span>
+                    </div>
+                </div>
+
+                <!-- BRANCH 4: DATA & SANKSI -->
+                <div id="branch4" onclick="selectNode('branch4')" class="mindmap-node bg-slate-900/90 border border-slate-700/80 hover:border-amber-400 rounded-xl p-5 shadow-xl cursor-pointer hover:-translate-y-1 transition duration-300 backdrop-blur-sm group">
+                    <div class="flex items-center space-x-3 mb-3 border-b border-slate-800 pb-3">
+                        <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg group-hover:scale-110 transition">
+                            <i class="fa-solid fa-folder-tree"></i>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-amber-400 font-mono font-bold block">BAGIAN 04</span>
+                            <h3 class="font-bold text-sm text-white">File & Sanksi</h3>
+                        </div>
+                    </div>
+                    <ul class="space-y-2 text-xs text-slate-300">
+                        <li class="flex items-center space-x-2">
+                            <i class="fa-solid fa-folder text-cyan-400"></i>
+                            <span>Simpan file di struktur folder</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-red-400">
+                            <i class="fa-solid fa-lock"></i>
+                            <span>Dilarang hapus file teman</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-amber-400">
+                            <i class="fa-solid fa-gavel"></i>
+                            <span>Sanksi: Lisan ➔ Tertulis ➔ Ganti Rugi</span>
+                        </li>
+                    </ul>
+                    <div class="mt-4 pt-2 border-t border-slate-800/60 text-right">
+                        <span class="text-[10px] text-amber-400 font-mono group-hover:underline">Detail Sanksi &rarr;</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- INTERACTIVE DETAIL MODAL -->
+    <div id="detailModal" class="no-print fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative animate-in fade-in zoom-in duration-200">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="modalContent">
+                <!-- Dynamic Content Injected Here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- POSTER MODE FOR PRINTING (A1/A2 ARCHITECTURAL BLUEPRINT STYLE) -->
+    <section id="posterView" class="print-poster hidden max-w-5xl mx-auto my-8 p-8 bg-slate-900 border-4 border-cyan-500 rounded-xl text-white shadow-2xl">
+        <!-- Poster Header -->
+        <div class="border-b-2 border-cyan-500/40 pb-6 mb-6 flex justify-between items-center">
+            <div>
+                <span class="text-xs font-mono text-cyan-400 tracking-widest uppercase">Standard Operating Procedure</span>
+                <h1 class="text-2xl sm:text-3xl font-black text-white uppercase tracking-wider">LABORATORIUM GAMBAR & DESAIN DPIB</h1>
+                <p class="text-sm text-slate-300 font-mono">SMK NEGERI 1 KALIPUCANG • TAHUN PELAJARAN 2026</p>
+            </div>
+            <div class="text-right hidden sm:block">
+                <div class="text-3xl text-cyan-400"><i class="fa-solid fa-drafting-compass"></i></div>
+                <span class="text-[10px] text-slate-400 font-mono">CAD / BIM / MANUAL</span>
+            </div>
         </div>
 
-        <!-- Grid Mind Map Section -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-            <!-- Card A: Tujuan -->
-            <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-5 hover:border-cyan-500 transition shadow-lg">
-                <div class="flex items-center gap-3 mb-3 border-b border-slate-700 pb-3">
-                    <div class="w-10 h-10 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-lg font-bold">A</div>
-                    <h3 class="font-bold text-lg text-white">Tujuan</h3>
-                </div>
-                <p class="text-sm text-slate-300 leading-relaxed">
-                    Pedoman pelaksanaan praktik agar proses pembelajaran berjalan aman, tertib, efektif, berkelanjutan, dan sesuai standar kerja industri konstruksi.
-                </p>
-            </div>
-
-            <!-- Card B: Ruang Lingkup -->
-            <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-5 hover:border-cyan-500 transition shadow-lg">
-                <div class="flex items-center gap-3 mb-3 border-b border-slate-700 pb-3">
-                    <div class="w-10 h-10 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-lg font-bold">B</div>
-                    <h3 class="font-bold text-lg text-white">Ruang Lingkup</h3>
-                </div>
-                <ul class="text-sm text-slate-300 space-y-2 list-disc list-inside">
-                    <li>Praktik gambar teknik manual</li>
-                    <li>Praktik CAD (2D/3D)</li>
-                    <li>Praktik BIM (pemodelan & dokumentasi)</li>
-                    <li>Pembelajaran produktif DPIB lainnya</li>
-                </ul>
-            </div>
-
-            <!-- Card C: Pihak Terlibat -->
-            <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-5 hover:border-cyan-500 transition shadow-lg">
-                <div class="flex items-center gap-3 mb-3 border-b border-slate-700 pb-3">
-                    <div class="w-10 h-10 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-lg font-bold">C</div>
-                    <h3 class="font-bold text-lg text-white">Pihak Terlibat</h3>
-                </div>
-                <ul class="text-sm text-slate-300 space-y-1">
-                    <li>• Kepala Sekolah</li>
-                    <li>• Ketua Program Keahlian DPIB</li>
-                    <li>• Guru Pengampu / Instruktur</li>
-                    <li>• Laboran / Teknisi</li>
-                    <li>• Peserta Didik DPIB</li>
-                </ul>
-            </div>
-
-            <!-- Card D: Tata Tertib -->
-            <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-5 hover:border-cyan-500 transition shadow-lg md:col-span-2 lg:col-span-1">
-                <div class="flex items-center gap-3 mb-3 border-b border-slate-700 pb-3">
-                    <div class="w-10 h-10 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-lg font-bold">D</div>
-                    <h3 class="font-bold text-lg text-white">Tata Tertib Umum</h3>
-                </div>
-                <ul class="text-sm text-slate-300 space-y-2 list-disc list-inside">
-                    <li>Hadir tepat waktu & isi daftar hadir</li>
-                    <li>Pakaian praktik rapi dan sopan</li>
-                    <li><strong class="text-rose-400">Dilarang bawa makanan & minuman</strong></li>
-                    <li>Jaga kebersihan & keamanan lab</li>
-                    <li>Gunakan alat sesuai fungsi & SOP</li>
-                </ul>
-            </div>
-
-            <!-- Card E: Prosedur Pelaksanaan & K3 -->
-            <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-5 hover:border-cyan-500 transition shadow-lg md:col-span-2">
-                <div class="flex items-center gap-3 mb-3 border-b border-slate-700 pb-3">
-                    <div class="w-10 h-10 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-lg font-bold">E</div>
-                    <h3 class="font-bold text-lg text-white">Prosedur Praktik & K3</h3>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-slate-300">
-                    <div>
-                        <h4 class="font-semibold text-cyan-300 mb-1">1. Persiapan & Pelaksanaan:</h4>
-                        <p class="mb-2">• Cek kelistrikan & software oleh guru.</p>
-                        <p class="mb-2">• Simpan file sesuai standar & penamaan.</p>
-                        <p>• Bimbingan aktif dari instruktur.</p>
-                    </div>
-                    <div>
-                        <h4 class="font-semibold text-cyan-300 mb-1">2. K3 & Penutupan:</h4>
-                        <p class="mb-2">• Posisi duduk & jarak pandang ergonomis.</p>
-                        <p class="mb-2">• Matikan komputer sesuai prosedur.</p>
-                        <p>• Area kerja bersih sebelum pulang.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card F & G: Pengelolaan & Sanksi -->
-            <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-5 hover:border-cyan-500 transition shadow-lg md:col-span-3">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div>
-                        <h3 class="font-bold text-lg text-white mb-2 flex items-center gap-2">
-                            <span class="text-cyan-400">F.</span> Pengelolaan Peralatan & File
-                        </h3>
-                        <p class="text-sm text-slate-300 leading-relaxed">
-                            Peralatan digunakan bergantian secara bertanggung jawab. Dilarang keras menghapus atau mengubah file hasil karya orang lain.
-                        </p>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-lg text-rose-400 mb-2 flex items-center gap-2">
-                            <span>G.</span> Sanksi Pelanggaran
-                        </h3>
-                        <p class="text-sm text-slate-300 leading-relaxed">
-                            Sanksi bertahap berupa teguran lisan, teguran tertulis, hingga kewajiban mengganti kerusakan alat jika terbukti disengaja.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Slogan Footer -->
-        <div class="mt-8 bg-gradient-to-r from-cyan-900/40 via-slate-800 to-cyan-900/40 border border-cyan-500/30 rounded-xl p-4 text-center">
-            <p class="text-cyan-200 font-semibold italic">
-                "Lab rapi, desain estetik, skill naik drastis. Kerja profesional dimulai dari disiplin kecil." 💻📐
+        <!-- Poster Banner Motto -->
+        <div class="bg-gradient-to-r from-blue-900/60 to-cyan-900/60 border border-cyan-500/30 rounded-lg p-4 mb-6 text-center">
+            <p class="text-sm sm:text-base font-semibold italic text-cyan-200">
+                "Lab Rapi, Desain Estetik, Skill Naik Drastis. Kerja Profesional Dimulai dari Disiplin Kecil." 💻📐
             </p>
         </div>
 
-        <!-- Tanda Tangan Pengesahan -->
-        <div class="mt-8 grid grid-cols-2 gap-8 text-center text-sm text-slate-300 pt-6 border-t border-slate-700">
-            <div>
-                <p>Mengetahui,</p>
-                <p class="font-semibold text-white">Kepala SMKN 1 Kalipucang</p>
-                <div class="h-16"></div>
-                <p class="font-bold underline text-white">Herdiana, S.Pd., M.Pd.</p>
-                <p class="text-xs text-slate-400">NIP. 19801006 200901 1 008</p>
+        <!-- Poster Grid Layout -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Box 1 -->
+            <div class="bg-slate-800/60 border border-slate-700 p-4 rounded-lg">
+                <h3 class="font-bold text-cyan-400 text-sm uppercase mb-3 flex items-center space-x-2">
+                    <i class="fa-solid fa-1"></i> <span>Tata Tertib Utama</span>
+                </h3>
+                <ul class="text-xs space-y-2 text-slate-200">
+                    <li>⏱️ <strong>Disiplin Waktu:</strong> Hadir tepat waktu & wajib mengisi daftar hadir.</li>
+                    <li>👔 <strong>Pakaian Praktik:</strong> Wajib menggunakan baju praktik yang rapi dan sopan.</li>
+                    <li>🚫 <strong>Larangan Makan/Minum:</strong> Dilarang membawa makanan dan minuman ke area lab.</li>
+                    <li>🧹 <strong>Kebersihan:</strong> Menjaga kebersihan meja, perangkat, dan ruangan bersama.</li>
+                </ul>
             </div>
-            <div>
-                <p>Kalipucang, Januari 2026</p>
-                <p class="font-semibold text-white">Ketua Kompetensi Keahlian</p>
-                <div class="h-16"></div>
-                <p class="font-bold underline text-white">Rudi Kustiadi, S.T., Gr.</p>
-                <p class="text-xs text-slate-400">NIP. 19930518 202221 1 004</p>
+
+            <!-- Box 2 -->
+            <div class="bg-slate-800/60 border border-slate-700 p-4 rounded-lg">
+                <h3 class="font-bold text-blue-400 text-sm uppercase mb-3 flex items-center space-x-2">
+                    <i class="fa-solid fa-2"></i> <span>Prosedur Pelaksanaan Praktik</span>
+                </h3>
+                <ul class="text-xs space-y-2 text-slate-200">
+                    <li>🎬 <strong>Sebelum Praktik:</strong> Cek listrik & PC, siapkan alat tulis/modul, simak arahan guru.</li>
+                    <li>🖥️ <strong>Saat Praktik:</strong> Gunakan software CAD/BIM standar, simpan file berkala (Autosave).</li>
+                    <li>🏁 <strong>Selesai Praktik:</strong> Amankan file, bersihkan area kerja, shutdown PC sesuai SOP.</li>
+                </ul>
+            </div>
+
+            <!-- Box 3 -->
+            <div class="bg-slate-800/60 border border-slate-700 p-4 rounded-lg">
+                <h3 class="font-bold text-emerald-400 text-sm uppercase mb-3 flex items-center space-x-2">
+                    <i class="fa-solid fa-3"></i> <span>K3 & Pengelolaan Perangkat</span>
+                </h3>
+                <ul class="text-xs space-y-2 text-slate-200">
+                    <li>🧘 <strong>Ergonomi:</strong> Atur posisi duduk dan jarak pandang mata ke layar monitor.</li>
+                    <li>🔒 <strong>Integritas Alat:</strong> Dilarang merusak atau memodifikasi perangkat lab.</li>
+                    <li>📢 <strong>Pelaporan:</strong> Segera laporkan ke guru/laboran jika terjadi kendala teknis.</li>
+                    <li>📂 <strong>Folder File:</strong> Simpan file pada direktori resmi & dilarang menghapus karya teman.</li>
+                </ul>
+            </div>
+
+            <!-- Box 4 -->
+            <div class="bg-slate-800/60 border border-slate-700 p-4 rounded-lg">
+                <h3 class="font-bold text-amber-400 text-sm uppercase mb-3 flex items-center space-x-2">
+                    <i class="fa-solid fa-4"></i> <span>Ketentuan Sanksi</span>
+                </h3>
+                <p class="text-xs text-slate-300 mb-2">Setiap pelanggaran SOP akan dikenakan sanksi bertingkat:</p>
+                <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                    <div class="bg-slate-900 p-2 rounded border border-slate-700 text-slate-300">
+                        <span class="block text-amber-400 font-bold">Tahap 1</span>
+                        Teguran Lisan
+                    </div>
+                    <div class="bg-slate-900 p-2 rounded border border-slate-700 text-slate-300">
+                        <span class="block text-amber-500 font-bold">Tahap 2</span>
+                        Teguran Tertulis
+                    </div>
+                    <div class="bg-slate-900 p-2 rounded border border-slate-700 text-slate-300">
+                        <span class="block text-red-400 font-bold">Tahap 3</span>
+                        Ganti Rugi Alat
+                    </div>
+                </div>
             </div>
         </div>
 
-    </main>
+        <!-- Signatures / Pengesahan -->
+        <div class="mt-8 pt-6 border-t border-slate-700 grid grid-cols-2 gap-8 text-center text-xs">
+            <div>
+                <p class="text-slate-400 mb-10">Mengetahui,<br><strong class="text-white">Kepala SMKN 1 Kalipucang</strong></p>
+                <p class="font-bold text-cyan-300 underline">Herdiana, S.Pd., M.Pd.</p>
+                <p class="text-[10px] text-slate-400">NIP. 19801006 200901 1 008</p>
+            </div>
+            <div>
+                <p class="text-slate-400 mb-10">Kalipucang, Januari 2026<br><strong class="text-white">Ketua Kompetensi Keahlian DPIB</strong></p>
+                <p class="font-bold text-cyan-300 underline">Rudi Kustiadi, S.T., Gr.</p>
+                <p class="text-[10px] text-slate-400">NIP. 19930518 202221 1 004</p>
+            </div>
+        </div>
+    </section>
 
+    <!-- FOOTER -->
+    <footer class="no-print bg-slate-950 border-t border-slate-800 py-3 text-center text-xs text-slate-500 font-mono">
+        <p>© 2026 Laboratorium DPIB • SMK Negeri 1 Kalipucang • Interactive Blueprint Visualizer</p>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const nodeData = {
+            root: {
+                title: "SOP LABORATORIUM GAMBAR & DESAIN DPIB",
+                subtitle: "SMK NEGERI 1 KALIPUCANG",
+                icon: "fa-compass-drafting",
+                color: "text-cyan-400",
+                desc: "Standard Operating Procedure ini berlaku bagi seluruh peserta didik dan instruktur di laboratorium DPIB untuk menjamin kelancaran pembelajaran gambar manual, CAD, dan BIM secara aman, efektif, dan profesional."
+            },
+            branch1: {
+                title: "01. Tata Tertib Utama Laboratorium",
+                icon: "fa-clipboard-list",
+                color: "text-cyan-400",
+                details: [
+                    { title: "Disiplin Waktu", text: "Hadir tepat waktu sebelum praktik dimulai dan wajib mengisi daftar hadir fisik/digital." },
+                    { title: "Pakaian Kerja / Praktik", text: "Menggunakan pakaian praktik (wearpack/seragam resmi) yang rapi, bersih, dan sesuai ketentuan sekolah." },
+                    { title: "Bebas Makanan & Minuman", text: "Dilarang keras membawa makanan atau minuman dalam bentuk apa pun ke area meja komputer untuk mencegah korsleting." },
+                    { title: "Ketertiban & Kebersihan", text: "Menjaga kebersihan area kerja pribadi dan tidak meninggalkan sampah di area lab." }
+                ]
+            },
+            branch2: {
+                title: "02. Prosedur Alur Praktik DPIB",
+                icon: "fa-diagram-next",
+                color: "text-blue-400",
+                details: [
+                    { title: "Fase 1: Persiapan", text: "Cek kondisi fisik PC, monitor, mouse, keyboard, dan sambungan listrik. Siapkan modul ajaran dan alat tulis manual." },
+                    { title: "Fase 2: Pelaksanaan Praktik", text: "Gunakan software CAD (AutoCAD/SketchUp/Revit) sesuai instruksi. Wajib menyimpan karya (Ctrl+S / Autosave) minimal 10 menit sekali." },
+                    { title: "Fase 3: Penutupan Praktik", text: "Simpan file ke folder resmi, bersihkan meja kerja, gulung kabel mouse/headset dengan rapi, lalu Shutdown komputer sesuai SOP." }
+                ]
+            },
+            branch3: {
+                title: "03. Keselamatan & Kesehatan Kerja (K3)",
+                icon: "fa-shield-heart",
+                color: "text-emerald-400",
+                details: [
+                    { title: "Ergonomi Komputer", text: "Posisi duduk harus tegak (90 derajat), jarak mata ke monitor minimal 50 cm untuk mencegah kelelahan mata dan tulang belakang." },
+                    { title: "Keamanan Perangkat", text: "Dilarang membongkar, menggeser, memindahkan kabel, atau memodifikasi hardware/software tanpa izin teknis." },
+                    { title: "Pelaporan Gangguan", text: "Apabila ada komputer error, bau sangit, atau percikan listrik, segera laporkan ke Guru / Laboran." }
+                ]
+            },
+            branch4: {
+                title: "04. Pengelolaan Data File & Sanksi",
+                icon: "fa-folder-tree",
+                color: "text-amber-400",
+                details: [
+                    { title: "Struktur File", text: "Simpan file dengan format penamaan resmi: [Kelas]_[Nama]_[JudulTugas].dwg/rvt pada drive D: di folder pribadi." },
+                    { title: "Etika File", text: "Dilarang keras mengubah, menyalin tanpa izin, atau menghapus file milik peserta didik lain." },
+                    { title: "Sanksi Pelanggaran", text: "Pelanggaran dikenakan sanksi bertahap: (1) Teguran lisan, (2) Teguran tertulis, (3) Penggantian alat jika terjadi kerusakan fisik akibat kesengajaan." }
+                ]
+            }
+        };
+
+        // Draw Connecting Lines for SVG
+        function drawConnectors() {
+            const svg = document.getElementById('svgCanvas');
+            svg.innerHTML = ''; // Clear lines
+
+            const root = document.getElementById('rootNode');
+            const branches = ['branch1', 'branch2', 'branch3', 'branch4'];
+
+            if (!root) return;
+            const rootRect = root.getBoundingClientRect();
+            const svgRect = svg.getBoundingClientRect();
+
+            const rootX = rootRect.left + rootRect.width / 2 - svgRect.left;
+            const rootY = rootRect.bottom - svgRect.top;
+
+            branches.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    const rect = el.getBoundingClientRect();
+                    const targetX = rect.left + rect.width / 2 - svgRect.left;
+                    const targetY = rect.top - svgRect.top;
+
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    const curveY = rootY + (targetY - rootY) / 2;
+                    const d = `M ${rootX} ${rootY} C ${rootX} ${curveY}, ${targetX} ${curveY}, ${targetX} ${targetY}`;
+                    
+                    path.setAttribute('d', d);
+                    path.setAttribute('class', 'mindmap-connector');
+                    svg.appendChild(path);
+                }
+            });
+        }
+
+        // Modal Functionality
+        function selectNode(key) {
+            const modal = document.getElementById('detailModal');
+            const content = document.getElementById('modalContent');
+            const data = nodeData[key];
+
+            if (!data) return;
+
+            let html = `
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="text-3xl ${data.color}">
+                        <i class="fa-solid ${data.icon}"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">${data.title}</h3>
+                        ${data.subtitle ? `<p class="text-xs text-cyan-400 font-mono">${data.subtitle}</p>` : ''}
+                    </div>
+                </div>
+            `;
+
+            if (data.desc) {
+                html += `<p class="text-slate-300 text-sm leading-relaxed mb-4">${data.desc}</p>`;
+            }
+
+            if (data.details) {
+                html += `<div class="space-y-3 mt-4">`;
+                data.details.forEach((item, index) => {
+                    html += `
+                        <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700">
+                            <h4 class="font-bold text-sm text-cyan-300 flex items-center space-x-2">
+                                <span class="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-400 text-xs flex items-center justify-center">${index+1}</span>
+                                <span>${item.title}</span>
+                            </h4>
+                            <p class="text-xs text-slate-300 mt-1 pl-7">${item.text}</p>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            }
+
+            content.innerHTML = html;
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').classList.add('hidden');
+        }
+
+        // View Mode Toggle
+        function toggleViewMode(mode) {
+            const mindmap = document.getElementById('mindmapView');
+            const poster = document.getElementById('posterView');
+            const btnMindmap = document.getElementById('btnMindmap');
+            const btnPoster = document.getElementById('btnPoster');
+
+            if (mode === 'poster') {
+                mindmap.classList.add('hidden');
+                poster.classList.remove('hidden');
+                btnPoster.className = "px-3 py-2 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950 flex items-center space-x-1 transition shadow-md";
+                btnMindmap.className = "px-3 py-2 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 flex items-center space-x-1 transition";
+            } else {
+                poster.classList.add('hidden');
+                mindmap.classList.remove('hidden');
+                btnMindmap.className = "px-3 py-2 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950 flex items-center space-x-1 transition shadow-md";
+                btnPoster.className = "px-3 py-2 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 flex items-center space-x-1 transition";
+                setTimeout(drawConnectors, 100);
+            }
+        }
+
+        // Search Nodes
+        function searchNodes() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const nodes = document.querySelectorAll('.mindmap-node');
+
+            nodes.forEach(node => {
+                const text = node.innerText.toLowerCase();
+                if (text.includes(query) && query !== '') {
+                    node.classList.add('ring-2', 'ring-cyan-400', 'scale-105');
+                } else {
+                    node.classList.remove('ring-2', 'ring-cyan-400', 'scale-105');
+                }
+            });
+        }
+
+        // Initialize SVG lines on window resize & load
+        window.addEventListener('resize', drawConnectors);
+        window.addEventListener('load', () => {
+            drawConnectors();
+        });
+    </script>
 </body>
 </html>
